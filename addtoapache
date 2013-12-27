@@ -1,0 +1,6 @@
+#!/bin/bash
+docroot=$(pwd);
+echo -e "\n127.0.0.1 $1" >> "/etc/hosts"
+echo -e "\n\n<VirtualHost *:80>\nDocumentRoot $docroot\nServerName $1\n</VirtualHost>" >> /etc/apache2/sites-enabled/000-default
+echo -e "Added virtual host \"$1\" with document root \"$docroot\""
+service apache2 restart
