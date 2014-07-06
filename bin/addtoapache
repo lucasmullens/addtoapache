@@ -1,0 +1,24 @@
+#!/bin/bash
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+
+docroot=$(pwd);
+echo -e "\n127.0.0.1 $1" >> "/etc/hosts"
+echo -e "
+<VirtualHost *:80>
+DocumentRoot $docroot
+ServerName $1
+<Directory $docroot>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride all
+    Require all granted
+</Directory>
+</VirtualHost>" >> "/etc/apache2/sites-available/$1.conf"
+sudo a2ensite "$1"
+echo -e "Added virtual host \"$1\" with document root \"$docroot\""
+
+
+service apache2 restart
